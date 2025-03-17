@@ -1,5 +1,6 @@
 package com.purityvanilla.pvperks;
 
+import com.purityvanilla.pvperks.commands.JoinDateCommand;
 import com.purityvanilla.pvperks.commands.PlaytimeCommand;
 import com.purityvanilla.pvperks.commands.ReloadCommand;
 import com.purityvanilla.pvperks.commands.SeenCommand;
@@ -27,6 +28,7 @@ public class PVPerks extends JavaPlugin {
     }
 
     private void registerCommands() {
+        getCommand("joindate").setExecutor(new JoinDateCommand(this));
         getCommand("playtime").setExecutor(new PlaytimeCommand(this));
         getCommand("reload").setExecutor(new ReloadCommand(this));
         getCommand("seen").setExecutor(new SeenCommand(this));

@@ -7,9 +7,14 @@ description: Chat plugin for the Purity Vanilla Minecraft server
 folia-supported: true
 depend: [pvLib, pvCore]
 commands:
+  joindate:
+    description: See when a player first joined the server
+    usage: /joindate [player]
+    permissions: pvperks.joindate
+    aliases: [jd, firstjoin]
   playtime:
     description: See a player's total playtime on the server
-    usage: /playtime
+    usage: /playtime [player]
     permission: pvperks.playtime
   reload:
     description: Reloads the plugin's configs and messages
