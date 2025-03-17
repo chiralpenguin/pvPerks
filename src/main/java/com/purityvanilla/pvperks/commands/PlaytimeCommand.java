@@ -46,8 +46,11 @@ public class PlaytimeCommand implements CommandExecutor {
         long playTimeSeconds = getPlayerPlaytimeSeconds(target);
         String playTimeString = TimeFormatting.PrettyDurationString(playTimeSeconds);
 
-        sender.sendMessage(plugin.config().getMessage("playtime-others",
-                CustomTagResolvers.playerDateResolver(target.getName(), playTimeString)));
+        TagResolver resolver = TagResolver.resolver(
+                Placeholder.component("player", Component.text(target.getName())),
+                Placeholder.component("playtime", Component.text(playTimeString))
+        );
+        sender.sendMessage(plugin.config().getMessage("playtime-others", resolver));
         return true;
     }
 

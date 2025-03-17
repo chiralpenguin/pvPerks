@@ -4,7 +4,7 @@
   "player-only": "<red>This command can only be used by a player",
   "player-seen": "<gold><player> <aqua>was last online on <gold><date>",
   "player-seen-usage": "<red>Usage: /seen <player>",
-  "playtime-others": "<gold><username> <aqua>has played for <gold><playtime> <aqua>on this server",
+  "playtime-others": "<gold><player> <aqua>has played for <gold><playtime> <aqua>on this server",
   "playtime-self": "<aqua>You have played for <gold><playtime> <aqua>on this server",
   "playtime-usage": "<red>Usage: /playtime <player>",
   "reload-plugin": "<aqua>Reloading pvPerks",
