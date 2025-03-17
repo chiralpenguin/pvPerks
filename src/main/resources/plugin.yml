@@ -7,6 +7,15 @@ description: Chat plugin for the Purity Vanilla Minecraft server
 folia-supported: true
 depend: [pvLib, pvCore]
 commands:
+  playtime:
+    description: See a player's total playtime on the server
+    usage: /playtime
+    permission: pvperks.playtime
+  seen:
+    description: See when a player was last online
+    usage: /seen <player>
+    permission: pvperks.seen
+    aliases: [lastseen]
   reload:
     description: Reloads the plugin's configs and messages
     usage: /pvperks-reload

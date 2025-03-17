@@ -1,6 +1,7 @@
 package com.purityvanilla.pvperks;
 
 import com.purityvanilla.pvperks.commands.ReloadCommand;
+import com.purityvanilla.pvperks.commands.SeenCommand;
 import com.purityvanilla.pvperks.listeners.PrepareAnvilListener;
 import com.purityvanilla.pvperks.listeners.SignChangeListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +27,7 @@ public class PVPerks extends JavaPlugin {
 
     private void registerCommands() {
         getCommand("reload").setExecutor(new ReloadCommand(this));
+        getCommand("seen").setExecutor(new SeenCommand(this));
     }
 
     private void registerListeners() {
