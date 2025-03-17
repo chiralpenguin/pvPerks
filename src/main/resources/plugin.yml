@@ -12,7 +12,11 @@ commands:
     usage: /pvperks-reload
     permission: pvperks.reload
 permissions:
-  pvperks.formatcodes.anvil.*:
+  pvperks.formatcodes.anvil.all:
     description: Gives access to all formatting codes in anvils
-  pvperks.formatcodes.sign.*:
+  pvperks.formatcodes.anvil.magic:
+    description: Gives access to magic (obfuscated) formatting in anvils
+  pvperks.formatcodes.sign.all:
     description: Gives access to all formatting codes in signs
+  pvperks.formatcodes.sign.magic:
+    description: Gives access to magic (obfuscated) formatting in signs

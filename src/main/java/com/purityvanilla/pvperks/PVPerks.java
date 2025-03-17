@@ -1,6 +1,7 @@
 package com.purityvanilla.pvperks;
 
 import com.purityvanilla.pvperks.commands.ReloadCommand;
+import com.purityvanilla.pvperks.listeners.SignChangeListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class PVPerks extends JavaPlugin {
@@ -11,6 +12,7 @@ public class PVPerks extends JavaPlugin {
         config = new Config();
 
         registerCommands();
+        registerListeners();
     }
 
     public Config  config() {
@@ -23,5 +25,9 @@ public class PVPerks extends JavaPlugin {
 
     private void registerCommands() {
         getCommand("reload").setExecutor(new ReloadCommand(this));
+    }
+
+    private void registerListeners() {
+        getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
     }
 }
