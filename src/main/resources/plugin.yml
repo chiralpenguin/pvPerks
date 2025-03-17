@@ -11,15 +11,15 @@ commands:
     description: See a player's total playtime on the server
     usage: /playtime
     permission: pvperks.playtime
-  seen:
-    description: See when a player was last online
-    usage: /seen <player>
-    permission: pvperks.seen
-    aliases: [lastseen]
   reload:
     description: Reloads the plugin's configs and messages
     usage: /pvperks-reload
     permission: pvperks.reload
+  seen:
+    description: See when a player was last online
+    usage: /seen <player>
+    permission: pvperks.seen
+    aliases: [ lastseen ]
 permissions:
   pvperks.formatcodes.anvil.all:
     description: Gives access to all formatting codes in anvils
