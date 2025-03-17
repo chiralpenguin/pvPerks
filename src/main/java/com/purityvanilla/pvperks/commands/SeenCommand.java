@@ -25,7 +25,7 @@ public class SeenCommand implements CommandExecutor {
         if (CommandGuard.argsSizeInvalid(1, args, sender, plugin.config().getMessage("player-seen-usage"))) return true;
 
         OfflinePlayer player = plugin.getServer().getOfflinePlayer(args[0].toLowerCase());
-        if (player.getName() == null) {
+        if (player.getLastSeen() == 0 || player.getName() == null) {
             sender.sendMessage(plugin.config().getMessage("player-not-found"));
             return true;
         }
