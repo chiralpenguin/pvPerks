@@ -39,7 +39,7 @@ public class PlaytimeCommand implements CommandExecutor {
 
         target = plugin.getServer().getPlayer(args[0].toLowerCase());
         if (target == null) {
-            sender.sendMessage("player-not-found");
+            sender.sendMessage(plugin.config().getMessage("player-not-found"));
             return true;
         }
 
