@@ -1,0 +1,18 @@
+name: pvPerks
+main: com.purityvanilla.pvperks.PVPerks
+version: 1.0
+api-version: 1.20
+authors: [chiralpenguin]
+description: Chat plugin for the Purity Vanilla Minecraft server
+folia-supported: true
+depend: [pvLib, pvCore]
+commands:
+  reload:
+    description: Reloads the plugin's configs and messages
+    usage: /pvperks-reload
+    permission: pvperks.reload
+permissions:
+  pvperks.formatcodes.anvil.*:
+    description: Gives access to all formatting codes in anvils
+  pvperks.formatcodes.sign.*:
+    description: Gives access to all formatting codes in signs
