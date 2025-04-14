@@ -26,6 +26,14 @@ commands:
     permission: pvperks.seen
     aliases: [ lastseen ]
 permissions:
+  pvperks.playerbeheading.canbehead:
+    description: Allows the player to behead other players
+  pvperks.playerbeheading.canlosehead:
+    description: Allows the player to be beheaded
+  pvperks.playerbeheading.beheadchance.50:
+    description: Gives the player a 50% chance to behead a beheadable player after killing them
+  pvperks.playerbeheading.alwaysbehead:
+    description: Gives the player a 100% chance to behead any player, regardless of beheadable status
   pvperks.formatcodes.anvil.all:
     description: Gives access to all formatting codes in anvils
   pvperks.formatcodes.anvil.magic:

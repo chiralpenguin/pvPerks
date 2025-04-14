@@ -1,2 +1,4 @@
-# pvPerks version 1.0
+# pvPerks version 1.0#
+default_beheading_chance: 0.1
+
 verbose: false

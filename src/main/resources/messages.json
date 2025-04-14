@@ -3,6 +3,8 @@
   "joindate-others": "<gold><player> <aqua>first joined the server on <gold><date>",
   "joindate-self": "<aqua>You first joined the server on <gold><date>",
   "joindate-usage": "<red>Usage: /joindate <player>",
+  "player-head-name": "<aqua>Head of <gold><player>",
+  "player-head-lore": "<blue>Player head",
   "player-not-found": "<red>Player could not be found",
   "player-only": "<red>This command can only be used by a player",
   "player-seen": "<gold><player> <aqua>was last online on <gold><date>",
