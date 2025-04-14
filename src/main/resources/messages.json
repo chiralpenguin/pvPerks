@@ -1,5 +1,7 @@
 {
   "console-only": "<red>This command can only be used from console",
+  "hat-item-restricted": "<red>This command does not support the held item",
+  "hat-usage": "<red>You must be holding an item in your hand",
   "joindate-others": "<gold><player> <aqua>first joined the server on <gold><date>",
   "joindate-self": "<aqua>You first joined the server on <gold><date>",
   "joindate-usage": "<red>Usage: /joindate <player>",

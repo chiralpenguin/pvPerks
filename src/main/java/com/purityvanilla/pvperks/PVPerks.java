@@ -1,9 +1,6 @@
 package com.purityvanilla.pvperks;
 
-import com.purityvanilla.pvperks.commands.JoinDateCommand;
-import com.purityvanilla.pvperks.commands.PlaytimeCommand;
-import com.purityvanilla.pvperks.commands.ReloadCommand;
-import com.purityvanilla.pvperks.commands.SeenCommand;
+import com.purityvanilla.pvperks.commands.*;
 import com.purityvanilla.pvperks.listeners.PlayerDeathListener;
 import com.purityvanilla.pvperks.listeners.PrepareAnvilListener;
 import com.purityvanilla.pvperks.listeners.SignChangeListener;
@@ -29,6 +26,7 @@ public class PVPerks extends JavaPlugin {
     }
 
     private void registerCommands() {
+        getCommand("hat").setExecutor(new HatCommand(this));
         getCommand("joindate").setExecutor(new JoinDateCommand(this));
         getCommand("playtime").setExecutor(new PlaytimeCommand(this));
         getCommand("reload").setExecutor(new ReloadCommand(this));

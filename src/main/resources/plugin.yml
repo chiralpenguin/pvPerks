@@ -7,6 +7,11 @@ description: Chat plugin for the Purity Vanilla Minecraft server
 folia-supported: true
 depend: [pvLib, pvCore]
 commands:
+  hat:
+    description: Wear the currently held item in your head armour slot
+    usage: /hat
+    permission: pvperks.hat
+    aliases: [helmet, wear]
   joindate:
     description: See when a player first joined the server
     usage: /joindate [player]
