@@ -3,6 +3,8 @@ package com.purityvanilla.pvperks.listeners;
 import com.purityvanilla.pvcore.PVCore;
 import com.purityvanilla.pvcore.util.FormatCodeParser;
 import com.purityvanilla.pvperks.PVPerks;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,22 +21,27 @@ public class PrepareAnvilListener implements Listener {
 
     @EventHandler
     public void onPrepareAnvil(PrepareAnvilEvent event) {
-        if (event.getResult() == null) {
+        if (event.getResult() == null || event.getInventory().getRenameText() == null || event.getInventory().getRenameText().isEmpty()) {
             return;
         }
 
         // Handle rename operations
-        if (event.getInventory().getRenameText() != null && !event.getInventory().getRenameText().isEmpty() &&
-                event.getView().getPlayer() instanceof Player player) {
-            ItemStack result = event.getResult();
+        if (event.getView().getPlayer() instanceof Player player) {
             String renameString = event.getInventory().getRenameText();
-
-            ItemMeta meta = result.getItemMeta();
-            if (meta!= null) {
-                meta.displayName(PVCore.getAPI().parsePlayerFormatString(renameString, player, FormatCodeParser.Context.ANVIL));
-                result.setItemMeta(meta);
-                event.setResult(result);
+            if (!renameString.contains("&") && !renameString.contains("#")) {
+                return;
             }
+
+            ItemStack result = event.getResult();
+            ItemMeta meta = result.getItemMeta();
+            if (meta == null) {
+                return;
+            }
+
+            Component itemNameComponent = PVCore.getAPI().parsePlayerFormatString(renameString, player, FormatCodeParser.Context.ANVIL);
+            meta.displayName(itemNameComponent.decoration(TextDecoration.ITALIC, false));
+            result.setItemMeta(meta);
+            event.setResult(result);
         }
     }
 }
