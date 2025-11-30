@@ -1,4 +1,6 @@
 # pvPerks version 1.0
 default_beheading_chance: 0.1
+badge_suffix_weight: 50
+icon_prefix_weight: 50
 
 verbose: false
