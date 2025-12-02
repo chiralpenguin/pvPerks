@@ -1,7 +1,7 @@
 package com.purityvanilla.pvperks.listeners;
 
 import com.purityvanilla.pvcore.PVCore;
-import com.purityvanilla.pvcore.util.FormatCodeParser;
+import com.purityvanilla.pvlib.util.FormatCodeParser;
 import com.purityvanilla.pvperks.PVPerks;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;

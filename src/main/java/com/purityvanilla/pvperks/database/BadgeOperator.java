@@ -17,9 +17,9 @@ public class BadgeOperator extends DatabaseOperator {
     @Override
     protected void createTables() {
         String query = """
-            CREATE TABLE IF NOTE EXISTS badges (
+            CREATE TABLE IF NOT EXISTS badges (
                 name VARCHAR(255) PRIMARY KEY,
-                text VARCHAR(255) NOT NULL,
+                text VARCHAR(255) NOT NULL
             )
             """;
         database.executeUpdate(query);
@@ -31,9 +31,10 @@ public class BadgeOperator extends DatabaseOperator {
                 active_badge TINYINT(1) NOT NULL DEFAULT 0,
                 active_icon TINYINT(1) NOT NULL DEFAULT 0,
                 PRIMARY KEY (player_uuid, badge_name),
-                CONSTRAINT fk_player_uuid FOREIGN KEY (player_uuid) REFERENCES players (uuid) ON DELETE CASCADE,
-                CONSTRAINT fk_badge_name FOREIGN KEY (badge_name) REFERENCES badges (name) ON DELETE CASCADE
-           """;
+                CONSTRAINT fk_badges_player_uuid FOREIGN KEY (player_uuid) REFERENCES players (uuid) ON DELETE CASCADE,
+                CONSTRAINT fk_badges_badge_name FOREIGN KEY (badge_name) REFERENCES badges (name) ON DELETE CASCADE
+            )
+            """;
         database.executeUpdate(query);
     }
 
@@ -95,7 +96,26 @@ public class BadgeOperator extends DatabaseOperator {
         return database.executeQuery(query, params, badgeDataProcessor);
     }
 
-    public void writePlayerBadgeData(UUID playerID, BadgeData data) {
+    public void savePlayerBadgeData(UUID playerID, BadgeData data) {
+        // Delete existing records to ensure table is up to date with app state
+        String query = "DELETE FROM player_badges WHERE player_uuid = ?";
+        List<Object> params = new ArrayList<>();
+        params.add(playerID);
+        database.executeUpdate(query, params);
 
+        query = """
+            INSERT INTO player_badges (player_uuid, badge_name, active_badge, active_icon) VALUES (?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE (active_badge, active_icon) = VALUES (active_badge, active_icon)
+        """;
+
+        for (String badgeName : data.getBadges()) {
+            params = new ArrayList<>();
+            params.add(playerID);
+            params.add(badgeName);
+            params.add(data.getActiveBadge().equalsIgnoreCase(badgeName));
+            params.add(data.getActiveIcon().equalsIgnoreCase(badgeName));
+
+            database.executeUpdate(query, params);
+        }
     }
 }

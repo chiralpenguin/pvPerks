@@ -5,7 +5,7 @@ public class Badge {
     private String text;
 
     public Badge(String name, String text) {
-        this.name = name;
+        this.name = name.toLowerCase();
         this.text = text;
     }
 

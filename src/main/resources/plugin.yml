@@ -1,7 +1,7 @@
 name: pvPerks
 main: com.purityvanilla.pvperks.PVPerks
-version: 1.0
-api-version: 1.20
+version: 1.1
+api-version: 1.21
 authors: [chiralpenguin]
 description: Chat plugin for the Purity Vanilla Minecraft server
 folia-supported: true
@@ -30,7 +30,25 @@ commands:
     usage: /seen <player>
     permission: pvperks.seen
     aliases: [ lastseen ]
+  badge:
+    description: Manage active badges and icons per player or server-wide
+    usage: /badge <create|delete|player|list|seticon|setbadge>
+    permission: pvperks.badge
+  badges:
+    description: Opens the badge GUI for easy selection of an active badge
+    usage: /badges
+    permission: pvperks.badge.gui
 permissions:
+  pvperks.badge.list:
+    description: Lists the badges available to the player
+  pvperks.badge.set:
+    description: Sets the player's active badge
+  pvperks.badge.seticon:
+    description: Set the player's active icon
+  pvperks.badge.manage:
+    description: Create and delete server badges
+  pvperks.badge.manageplayer:
+    description: Update the badge data for another player
   pvperks.playerbeheading.canbehead:
     description: Allows the player to behead other players
   pvperks.playerbeheading.canlosehead:

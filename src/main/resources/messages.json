@@ -1,4 +1,7 @@
 {
+  "badge-created": "<aqua>Created new badge <gold><badge>",
+  "badge-deleted": "<aqua>Deleted badge <gold><badge>",
+  "badge-updated": "<aqua>Updated existing badge <gold><badge>",
   "console-only": "<red>This command can only be used from console",
   "hat-item-restricted": "<red>This command does not support the held item",
   "hat-usage": "<red>You must be holding an item in your hand",
