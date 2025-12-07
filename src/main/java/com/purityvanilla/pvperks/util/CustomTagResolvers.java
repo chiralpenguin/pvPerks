@@ -9,4 +9,11 @@ public class CustomTagResolvers {
     public static TagResolver badgeResolver(String badgeName) {
         return TagResolver.resolver(Placeholder.component("badge", Component.text(badgeName)));
     }
+
+    public static TagResolver playerBadgeResolver(String playerName, String badgeName) {
+        return TagResolver.resolver(
+                Placeholder.component("player", Component.text(playerName)),
+                Placeholder.component("badge", Component.text(badgeName))
+        );
+    }
 }

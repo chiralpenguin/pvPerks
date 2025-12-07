@@ -1,4 +1,5 @@
 {
+  "badge-added": "<aqua>Player <gold><player> <aqua>can now use badge <gold><badge>",
   "badge-created": "<aqua>Created new badge <gold><badge>",
   "badge-deleted": "<aqua>Deleted badge <gold><badge>",
   "badge-not-found": "<red>Could not find badge <badge>",
