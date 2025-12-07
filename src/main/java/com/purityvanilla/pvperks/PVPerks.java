@@ -2,13 +2,14 @@ package com.purityvanilla.pvperks;
 
 import com.purityvanilla.pvcore.PVCore;
 import com.purityvanilla.pvlib.database.DataService;
+import com.purityvanilla.pvlib.tasks.CacheCleanTask;
+import com.purityvanilla.pvlib.tasks.SaveDataTask;
 import com.purityvanilla.pvperks.commands.*;
 import com.purityvanilla.pvperks.database.BadgeDataService;
 import com.purityvanilla.pvperks.listeners.PlayerDeathListener;
 import com.purityvanilla.pvperks.listeners.PrepareAnvilListener;
 import com.purityvanilla.pvperks.listeners.SignChangeListener;
 import io.papermc.paper.command.brigadier.Commands;
-import io.papermc.paper.plugin.lifecycle.event.LifecycleEvent;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,6 +31,16 @@ public class PVPerks extends JavaPlugin {
         registerCommands();
         registerBrigadierCommands();
         registerListeners();
+        scheduleTasks();
+    }
+
+    @Override
+    public void onDisable() {
+        for (DataService service : dataServices.values()) {
+            service.saveAll();
+        }
+
+        getLogger().info("Plugin disabled");
     }
 
     public Config config() {
@@ -64,5 +75,19 @@ public class PVPerks extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
         getServer().getPluginManager().registerEvents(new PrepareAnvilListener(this), this);
         getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
+    }
+
+    private void scheduleTasks() {
+        getServer().getGlobalRegionScheduler().cancelTasks(this);
+
+        // Run saveData every 5 minutes after 1 minute
+        SaveDataTask saveDataTask = new SaveDataTask(dataServices);
+        getServer().getGlobalRegionScheduler().runAtFixedRate(
+                this, task -> saveDataTask.run(),1200L, 6000L);
+
+        // Run cacheClean every 10 minutes after 2 minute
+        CacheCleanTask cacheCleanTask = new CacheCleanTask(dataServices);
+        getServer().getGlobalRegionScheduler().runAtFixedRate(
+                this, task -> cacheCleanTask.run(),2400L, 12000L);
     }
 }

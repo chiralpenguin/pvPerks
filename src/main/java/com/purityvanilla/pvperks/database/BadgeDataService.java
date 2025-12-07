@@ -103,4 +103,14 @@ public class BadgeDataService extends DataService {
 
         return playerBadgeCache.get(playerID);
     }
+
+    /**
+     * Check if a given badge is available to a player
+     * @param playerID uuid of player to check access
+     * @param badge to search for
+     * @return {@code true} if badge available, {@code false} otherwise
+     */
+    public boolean playerHasBadge(UUID playerID, Badge badge) {
+        return playerBadgeCache.get(playerID).getBadges().contains(badge.getName());
+    }
 }

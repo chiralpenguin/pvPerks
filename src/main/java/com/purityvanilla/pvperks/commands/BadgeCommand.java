@@ -7,10 +7,12 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.purityvanilla.pvperks.PVPerks;
 import com.purityvanilla.pvperks.player.Badge;
+import com.purityvanilla.pvperks.player.BadgeData;
 import com.purityvanilla.pvperks.util.CustomTagResolvers;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class BadgeCommand {
     private static final String PERM_BASE = "pvperks.badge";
@@ -30,8 +32,35 @@ public class BadgeCommand {
     public LiteralCommandNode<CommandSourceStack> buildCommand() {
         return Commands.literal("badge")
             .requires(source -> source.getSender().hasPermission(PERM_BASE))
-                .then(manageBadgesCommand())
-                .build();
+                .then(manageBadgesCommand()
+                        .then(setBadgeCommand())
+                ).build();
+    }
+    /*
+    Badge selection commands for players
+     */
+    private LiteralArgumentBuilder<CommandSourceStack> setBadgeCommand() {
+        return Commands.literal("set")
+                .requires(source -> source instanceof Player)
+                .requires(source -> source.getSender().hasPermission(PERM_SET))
+                .then(Commands.argument("badge", StringArgumentType.string())
+                        .executes(this::executeSetBadge)
+                );
+    }
+
+    private int executeSetBadge(CommandContext<CommandSourceStack> ctx) {
+        String badgeName = ctx.getArgument("badge", String.class).toLowerCase();
+        Badge badge = plugin.getBadgeData().getBadge(badgeName);
+        Player player = (Player) ctx.getSource().getSender();
+
+        if (badge == null || !plugin.getBadgeData().playerHasBadge(player.getUniqueId(), badge)) {
+           player.sendMessage(plugin.config().getMessage("badge-not-found",
+                   CustomTagResolvers.badgeResolver(badgeName)
+           ));
+           return Command.SINGLE_SUCCESS;
+        }
+
+
     }
 
     /*
@@ -40,14 +69,16 @@ public class BadgeCommand {
     private LiteralArgumentBuilder<CommandSourceStack> manageBadgesCommand() {
         return Commands.literal("manage")
                 .requires(source -> source.getSender().hasPermission(PERM_MANAGE))
-                .then(createBadgeCommand());
+                .then(createBadgeCommand()
+                );
     }
 
     private LiteralArgumentBuilder<CommandSourceStack> createBadgeCommand() {
         return Commands.literal("create")
-                .then(Commands.argument("badge", StringArgumentType.string()))
-                    .then(Commands.argument("text", StringArgumentType.string()))
-                        .executes(this::executeCreateBadge);
+                .then(Commands.argument("badge", StringArgumentType.string())
+                    .then(Commands.argument("text", StringArgumentType.string())
+                        .executes(this::executeCreateBadge))
+                );
     }
 
     private int executeCreateBadge(CommandContext<CommandSourceStack> ctx) {
