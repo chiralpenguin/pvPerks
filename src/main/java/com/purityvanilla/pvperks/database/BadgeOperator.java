@@ -90,7 +90,7 @@ public class BadgeOperator extends DatabaseOperator {
                 if (rs.getBoolean("active_icon")) activeIcon = name;
             }
 
-            return new BadgeData(availableBadges, activeBadge, activeIcon);
+            return new BadgeData(playerID, availableBadges, activeBadge, activeIcon);
         };
 
         return database.executeQuery(query, params, badgeDataProcessor);
@@ -105,15 +105,15 @@ public class BadgeOperator extends DatabaseOperator {
 
         query = """
             INSERT INTO player_badges (player_uuid, badge_name, active_badge, active_icon) VALUES (?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE (active_badge, active_icon) = VALUES (active_badge, active_icon)
+            ON DUPLICATE KEY UPDATE active_badge = VALUES(active_badge), active_icon = VALUES(active_icon)
         """;
 
         for (String badgeName : data.getBadges()) {
             params = new ArrayList<>();
             params.add(playerID);
             params.add(badgeName);
-            params.add(data.getActiveBadge().equalsIgnoreCase(badgeName));
-            params.add(data.getActiveIcon().equalsIgnoreCase(badgeName));
+            params.add(data.getActiveBadge().equalsIgnoreCase(badgeName) ? 1 : 0);
+            params.add(data.getActiveIcon().equalsIgnoreCase(badgeName) ? 1 : 0);
 
             database.executeUpdate(query, params);
         }

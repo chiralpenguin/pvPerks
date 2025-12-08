@@ -1,19 +1,23 @@
 package com.purityvanilla.pvperks.player;
 
 import java.util.Set;
+import java.util.UUID;
 
 public class BadgeData {
+    private final UUID playerID;
     private final Set<String> availableBadges;
     private String activeBadge;
     private String activeIcon;
 
-    public BadgeData(Set<String> availableBadges, String activeBadge, String activeIcon) {
+    public BadgeData(UUID playerID, Set<String> availableBadges, String activeBadge, String activeIcon) {
+        this.playerID = playerID;
         this.availableBadges = availableBadges;
         this.activeBadge = activeBadge;
         this.activeIcon = activeBadge;
     }
 
-    public BadgeData(Set<String> availableBadges) {
+    public BadgeData(UUID playerID, Set<String> availableBadges) {
+        this.playerID = playerID;
         this.availableBadges = availableBadges;
         this.activeBadge = "";
         this.activeIcon = "";
@@ -45,5 +49,15 @@ public class BadgeData {
 
     public void setActiveIcon(String activeIcon) {
         this.activeIcon = activeIcon;
+    }
+
+    public void updatePlayerBadge(Badge badge, int priority) {
+        setActiveBadge(badge.getName());
+        BadgeMetaHelper.updateSuffix(playerID, priority, badge.getText());
+    }
+
+    public void clearPlayerBadge(int priority) {
+        setActiveBadge("");
+        BadgeMetaHelper.removeSuffix(playerID, priority);
     }
 }

@@ -23,8 +23,4 @@ public class Badge {
         this.text = text;
     }
 
-    public void setActiveBadge(UUID playerID, int suffixPriority, BadgeData playerBadgeData) {
-        BadgeMetaHelper.setSuffix(playerID, suffixPriority, getText());
-        playerBadgeData.setActiveBadge(getName());
-    }
 }

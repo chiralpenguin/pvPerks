@@ -7,6 +7,7 @@ import com.purityvanilla.pvlib.tasks.SaveDataTask;
 import com.purityvanilla.pvperks.commands.*;
 import com.purityvanilla.pvperks.database.BadgeDataService;
 import com.purityvanilla.pvperks.listeners.PlayerDeathListener;
+import com.purityvanilla.pvperks.listeners.PreLoginListener;
 import com.purityvanilla.pvperks.listeners.PrepareAnvilListener;
 import com.purityvanilla.pvperks.listeners.SignChangeListener;
 import io.papermc.paper.command.brigadier.Commands;
@@ -74,6 +75,7 @@ public class PVPerks extends JavaPlugin {
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
         getServer().getPluginManager().registerEvents(new PrepareAnvilListener(this), this);
+        getServer().getPluginManager().registerEvents(new PreLoginListener(this), this);
         getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
     }
 

@@ -39,6 +39,10 @@ commands:
     usage: /badges
     permission: pvperks.badge.gui
 permissions:
+  pvperks.badge.clear:
+    description: Clears the players badge slot
+  pvperks.badge.clearicon:
+    description: Clears the players icon slot
   pvperks.badge.list:
     description: Lists the badges available to the player
   pvperks.badge.set:
