@@ -4,7 +4,7 @@ import com.purityvanilla.pvlib.database.DatabaseConnector;
 import com.purityvanilla.pvlib.database.DatabaseOperator;
 import com.purityvanilla.pvlib.database.ResultSetProcessor;
 import com.purityvanilla.pvperks.player.Badge;
-import com.purityvanilla.pvperks.player.BadgeData;
+import com.purityvanilla.pvperks.player.PlayerBadgeData;
 
 import java.util.*;
 
@@ -73,11 +73,11 @@ public class BadgeOperator extends DatabaseOperator {
         return database.executeUpdate(query, params);
     }
 
-    public BadgeData getPlayerBadgeData(UUID playerID) {
+    public PlayerBadgeData getPlayerBadgeData(UUID playerID) {
         String query = "SELECT badge_name, active_badge, active_icon FROM player_badges WHERE player_UUID = ?";
         List<Object> params = new ArrayList<>();
         params.add(playerID);
-        ResultSetProcessor<BadgeData> badgeDataProcessor = rs -> {
+        ResultSetProcessor<PlayerBadgeData> badgeDataProcessor = rs -> {
             Set<String> availableBadges = new HashSet<>();
             String activeBadge = "";
             String activeIcon = "";
@@ -90,13 +90,13 @@ public class BadgeOperator extends DatabaseOperator {
                 if (rs.getBoolean("active_icon")) activeIcon = name;
             }
 
-            return new BadgeData(playerID, availableBadges, activeBadge, activeIcon);
+            return new PlayerBadgeData(playerID, availableBadges, activeBadge, activeIcon);
         };
 
         return database.executeQuery(query, params, badgeDataProcessor);
     }
 
-    public void savePlayerBadgeData(UUID playerID, BadgeData data) {
+    public void savePlayerBadgeData(UUID playerID, PlayerBadgeData data) {
         // Delete existing records to ensure table is up to date with app state
         String query = "DELETE FROM player_badges WHERE player_uuid = ?";
         List<Object> params = new ArrayList<>();

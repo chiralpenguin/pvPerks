@@ -1,22 +1,30 @@
 package com.purityvanilla.pvperks.player;
 
+import com.purityvanilla.pvperks.database.BadgeDataService;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
 import java.util.Set;
 import java.util.UUID;
 
-public class BadgeData {
+public class PlayerBadgeData {
     private final UUID playerID;
     private final Set<String> availableBadges;
     private String activeBadge;
     private String activeIcon;
 
-    public BadgeData(UUID playerID, Set<String> availableBadges, String activeBadge, String activeIcon) {
+    public PlayerBadgeData(UUID playerID, Set<String> availableBadges, String activeBadge, String activeIcon) {
         this.playerID = playerID;
         this.availableBadges = availableBadges;
         this.activeBadge = activeBadge;
         this.activeIcon = activeBadge;
     }
 
-    public BadgeData(UUID playerID, Set<String> availableBadges) {
+    public PlayerBadgeData(UUID playerID, Set<String> availableBadges) {
         this.playerID = playerID;
         this.availableBadges = availableBadges;
         this.activeBadge = "";
@@ -59,5 +67,22 @@ public class BadgeData {
     public void clearPlayerBadge(int priority) {
         setActiveBadge("");
         BadgeMetaHelper.removeSuffix(playerID, priority);
+    }
+
+    public Component getBadgeListMessage(BadgeDataService badgeData) {
+        TextComponent.Builder message = Component.text();
+        for (String badgeName : availableBadges) {
+            Badge badge = badgeData.getBadge(badgeName);
+            if (badge == null) continue;
+            Component badgeComponent = LegacyComponentSerializer.legacyAmpersand()
+                    .deserialize(badge.getText())
+                    .hoverEvent(HoverEvent.showText(Component.text(badgeName).color(NamedTextColor.GOLD)))
+                    .clickEvent(ClickEvent.runCommand("/badge set " + badgeName));
+
+            message.append(badgeComponent);
+            message.append(Component.text("  "));
+        }
+
+        return message.build();
     }
 }

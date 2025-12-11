@@ -4,7 +4,7 @@ import com.purityvanilla.pvlib.database.DataService;
 import com.purityvanilla.pvlib.database.DatabaseConnector;
 import com.purityvanilla.pvlib.util.CacheHelper;
 import com.purityvanilla.pvperks.player.Badge;
-import com.purityvanilla.pvperks.player.BadgeData;
+import com.purityvanilla.pvperks.player.PlayerBadgeData;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BadgeDataService extends DataService {
     private final BadgeOperator operator;
     private final ConcurrentHashMap<String, Badge> badgeCache;
-    private final ConcurrentHashMap<UUID, BadgeData> playerBadgeCache;
+    private final ConcurrentHashMap<UUID, PlayerBadgeData> playerBadgeCache;
 
     public BadgeDataService(JavaPlugin plugin, DatabaseConnector database) {
         super(plugin);
@@ -36,7 +36,7 @@ public class BadgeDataService extends DataService {
             operator.saveBadge(badge);
         }
 
-        for (Map.Entry<UUID, BadgeData> entry : playerBadgeCache.entrySet()) {
+        for (Map.Entry<UUID, PlayerBadgeData> entry : playerBadgeCache.entrySet()) {
             operator.savePlayerBadgeData(entry.getKey(), entry.getValue());
         }
     }
@@ -96,7 +96,7 @@ public class BadgeDataService extends DataService {
      * @param playerID uuid of player to retrieve {@code BadgeData} for
      * @return {@code BadgeData} of player
      */
-    public BadgeData getPlayerBadgeData(UUID playerID) {
+    public PlayerBadgeData getPlayerBadgeData(UUID playerID) {
         if (!playerBadgeCache.containsKey(playerID)) {
             loadPlayerBadges(playerID);
         }

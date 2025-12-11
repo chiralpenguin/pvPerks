@@ -4,19 +4,24 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.purityvanilla.pvperks.PVPerks;
+import com.purityvanilla.pvperks.database.BadgeDataService;
 import com.purityvanilla.pvperks.player.Badge;
-import com.purityvanilla.pvperks.player.BadgeData;
+import com.purityvanilla.pvperks.player.PlayerBadgeData;
 import com.purityvanilla.pvperks.util.CustomTagResolvers;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class BadgeCommand {
     private static final String PERM_BASE = "pvperks.badge";
@@ -40,6 +45,7 @@ public class BadgeCommand {
             .requires(source -> source.getSender().hasPermission(PERM_BASE))
                 .then(setBadgeCommand())
                 .then(clearBadgeCommand())
+                .then(listBadgesCommand())
                 .then(manageBadgesCommand())
                 .then(playerBadgesCommand())
                 .build();
@@ -55,6 +61,7 @@ public class BadgeCommand {
                     source.getSender().hasPermission(PERM_SET)
                 )
                 .then(Commands.argument("badge", StringArgumentType.string())
+                        .suggests(playerBadges(plugin.getBadgeData()))
                         .executes(this::executeSetBadge)
                 );
     }
@@ -97,6 +104,29 @@ public class BadgeCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    private LiteralArgumentBuilder<CommandSourceStack> listBadgesCommand() {
+        return Commands.literal("list")
+                .requires(source ->
+                        source.getExecutor() instanceof Player &&
+                        source.getExecutor().hasPermission(PERM_LIST))
+                .executes(this::executeListBadge);
+    }
+
+    private int executeListBadge(CommandContext<CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getSender();
+        PlayerBadgeData playerBadgeData = plugin.getBadgeData().getPlayerBadgeData(player.getUniqueId());
+
+        if (playerBadgeData.getBadges().isEmpty()) {
+            player.sendMessage(plugin.config().getMessage("badge-list-empty"));
+            return Command.SINGLE_SUCCESS;
+        }
+
+        player.sendMessage(plugin.config().getMessage("badge-list-header"));
+        player.sendMessage(playerBadgeData.getBadgeListMessage(plugin.getBadgeData()));
+
+        return Command.SINGLE_SUCCESS;
+    }
+
     /*
     Badge management commands available to admins
      */
@@ -110,6 +140,7 @@ public class BadgeCommand {
     private LiteralArgumentBuilder<CommandSourceStack> createBadgeCommand() {
         return Commands.literal("create")
                 .then(Commands.argument("badge", StringArgumentType.string())
+                    .suggests(badges(plugin.getBadgeData()))
                     .then(Commands.argument("text", StringArgumentType.string())
                         .executes(this::executeCreateBadge)
                 ));
@@ -149,7 +180,9 @@ public class BadgeCommand {
     private LiteralArgumentBuilder<CommandSourceStack> addPlayerBadgeCommand() {
         return Commands.literal("add")
                 .then(Commands.argument("badge", StringArgumentType.string())
+                        .suggests(badges(plugin.getBadgeData()))
                         .then(Commands.argument("player", StringArgumentType.string())
+                                .suggests(playerNames())
                                 .executes(this::executeAddPlayerBadge)
                 ));
     }
@@ -172,7 +205,7 @@ public class BadgeCommand {
             return Command.SINGLE_SUCCESS;
         }
 
-        BadgeData playerBadgeData = plugin.getBadgeData().getPlayerBadgeData(targetID);
+        PlayerBadgeData playerBadgeData = plugin.getBadgeData().getPlayerBadgeData(targetID);
         playerBadgeData.addBadge(badge.getName());
         sender.sendMessage(plugin.config().getMessage(
                 "badge-added", CustomTagResolvers.playerBadgeResolver(target.getName(), badgeName)));
@@ -182,7 +215,9 @@ public class BadgeCommand {
     private LiteralArgumentBuilder<CommandSourceStack> removePlayerBadgeCommand() {
         return Commands.literal("remove")
                 .then(Commands.argument("badge", StringArgumentType.string())
+                        .suggests(badges(plugin.getBadgeData()))
                         .then(Commands.argument("player", StringArgumentType.string())
+                                .suggests(playerNames())
                                 .executes(this::executeRemovePlayerBadge)
                         ));
     }
@@ -205,7 +240,7 @@ public class BadgeCommand {
             return Command.SINGLE_SUCCESS;
         }
 
-        BadgeData playerBadgeData = plugin.getBadgeData().getPlayerBadgeData(targetID);
+        PlayerBadgeData playerBadgeData = plugin.getBadgeData().getPlayerBadgeData(targetID);
         playerBadgeData.removeBadge(badgeName);
         if (playerBadgeData.getActiveBadge().equals(badgeName)) playerBadgeData.clearPlayerBadge(
                 plugin.config().getBadgeSuffixWeight());
@@ -213,5 +248,35 @@ public class BadgeCommand {
         sender.sendMessage(plugin.config().getMessage(
                 "badge-removed", CustomTagResolvers.playerBadgeResolver(target.getName(), badgeName)));
         return Command.SINGLE_SUCCESS;
+    }
+
+    /*
+    Reusable SuggestionProviders
+     */
+    private SuggestionProvider<CommandSourceStack> playerNames() {
+        return (ctx, builder) -> {
+            Bukkit.getOnlinePlayers().forEach(p -> builder.suggest(p.getName()));
+            return builder.buildFuture();
+        };
+    }
+
+    private SuggestionProvider<CommandSourceStack> badges(BadgeDataService badgeData) {
+        return (ctx, builder) -> {
+            for (Badge badge : badgeData.getAllBadges()) {
+                builder.suggest(badge.getName());
+            }
+            return builder.buildFuture();
+        };
+    }
+
+    private SuggestionProvider<CommandSourceStack> playerBadges(BadgeDataService badgeData) {
+        return (ctx, builder) -> {
+            Player player = (Player) ctx.getSource().getExecutor();
+            for (String badgeName : badgeData.getPlayerBadgeData(player.getUniqueId()).getBadges()) {
+                builder.suggest(badgeName);
+            }
+
+            return builder.buildFuture();
+        };
     }
 }
