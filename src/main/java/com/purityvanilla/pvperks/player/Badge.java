@@ -1,7 +1,5 @@
 package com.purityvanilla.pvperks.player;
 
-import java.util.UUID;
-
 public class Badge {
     private final String name;
     private String text;

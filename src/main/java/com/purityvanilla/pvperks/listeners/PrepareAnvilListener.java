@@ -38,7 +38,7 @@ public class PrepareAnvilListener implements Listener {
                 return;
             }
 
-            Component itemNameComponent = PVCore.getAPI().parsePlayerFormatString(renameString, player, FormatCodeParser.Context.ANVIL);
+            Component itemNameComponent = FormatCodeParser.parseString(renameString, player, FormatCodeParser.Context.ANVIL);
             meta.displayName(itemNameComponent.decoration(TextDecoration.ITALIC, false));
             result.setItemMeta(meta);
             event.setResult(result);

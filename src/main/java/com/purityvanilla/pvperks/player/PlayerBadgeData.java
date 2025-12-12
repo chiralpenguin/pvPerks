@@ -1,6 +1,8 @@
 package com.purityvanilla.pvperks.player;
 
+import com.purityvanilla.pvperks.Config;
 import com.purityvanilla.pvperks.database.BadgeDataService;
+import com.purityvanilla.pvperks.util.CustomTagResolvers;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -69,14 +71,16 @@ public class PlayerBadgeData {
         BadgeMetaHelper.removeSuffix(playerID, priority);
     }
 
-    public Component getBadgeListMessage(BadgeDataService badgeData) {
+    public Component getBadgeListMessage(BadgeDataService badgeData, Config config) {
         TextComponent.Builder message = Component.text();
         for (String badgeName : availableBadges) {
             Badge badge = badgeData.getBadge(badgeName);
             if (badge == null) continue;
+            // TODO Generalise to accept both MiniMessage and Legacy format codes as LuckPerms supports both
             Component badgeComponent = LegacyComponentSerializer.legacyAmpersand()
                     .deserialize(badge.getText())
-                    .hoverEvent(HoverEvent.showText(Component.text(badgeName).color(NamedTextColor.GOLD)))
+                    .hoverEvent(HoverEvent.showText(config.getMessage("badge-list-hover",
+                            CustomTagResolvers.badgeResolver(badgeName))))
                     .clickEvent(ClickEvent.runCommand("/badge set " + badgeName));
 
             message.append(badgeComponent);

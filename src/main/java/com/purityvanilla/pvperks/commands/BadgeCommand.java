@@ -122,7 +122,7 @@ public class BadgeCommand {
         }
 
         player.sendMessage(plugin.config().getMessage("badge-list-header"));
-        player.sendMessage(playerBadgeData.getBadgeListMessage(plugin.getBadgeData()));
+        player.sendMessage(playerBadgeData.getBadgeListMessage(plugin.getBadgeData(), plugin.config()));
 
         return Command.SINGLE_SUCCESS;
     }
