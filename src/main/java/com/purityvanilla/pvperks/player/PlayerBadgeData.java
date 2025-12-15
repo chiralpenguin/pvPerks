@@ -71,6 +71,16 @@ public class PlayerBadgeData {
         BadgeMetaHelper.removeSuffix(playerID, priority);
     }
 
+    public void updatePlayerIcon(Badge badge, int priority) {
+        setActiveIcon(badge.getName());
+        BadgeMetaHelper.updatePrefix(playerID, priority, badge.getText());
+    }
+
+    public void clearPlayerIcon(int priority) {
+        setActiveIcon("");
+        BadgeMetaHelper.removePrefix(playerID, priority);
+    }
+
     public Component getBadgeListMessage(BadgeDataService badgeData, Config config) {
         TextComponent.Builder message = Component.text();
         for (String badgeName : availableBadges) {

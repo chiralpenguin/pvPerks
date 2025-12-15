@@ -1,6 +1,7 @@
 {
   "badge-added": "<aqua>Player <gold><player> <aqua>can now use badge <gold><badge>",
   "badge-cleared": "<aqua>Cleared badge",
+  "badge-cleared-icon": "<aqua>Cleared icon",
   "badge-created": "<aqua>Created new badge <gold><badge>",
   "badge-deleted": "<aqua>Deleted badge <gold><badge>",
   "badge-list-header": "<aqua>The following badges are available:",
@@ -9,6 +10,7 @@
   "badge-not-found": "<red>Could not find badge <badge>",
   "badge-removed": "<aqua>Player <gold><player> <aqua>can no longer use badge <gold><badge>",
   "badge-set": "<aqua>Set active badge to <gold><badge>",
+  "badge-set-icon": "<aqua>Set active icon to <gold><badge>",
   "badge-updated": "<aqua>Updated existing badge <gold><badge>",
   "console-only": "<red>This command can only be used from console",
   "hat-item-restricted": "<red>This command does not support the held item",

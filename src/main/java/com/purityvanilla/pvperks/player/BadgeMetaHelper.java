@@ -1,6 +1,5 @@
 package com.purityvanilla.pvperks.player;
 
-import com.purityvanilla.pvcore.PVCore;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.node.NodeEqualityPredicate;

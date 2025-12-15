@@ -45,6 +45,8 @@ public class BadgeCommand {
             .requires(source -> source.getSender().hasPermission(PERM_BASE))
                 .then(setBadgeCommand())
                 .then(clearBadgeCommand())
+                .then(setIconCommand())
+                .then(clearIconCommand())
                 .then(listBadgesCommand())
                 .then(manageBadgesCommand())
                 .then(playerBadgesCommand())
@@ -101,6 +103,56 @@ public class BadgeCommand {
         plugin.getBadgeData().getPlayerBadgeData(player.getUniqueId()).clearPlayerBadge(
                 plugin.config().getBadgeSuffixWeight());
         player.sendMessage(plugin.config().getMessage("badge-cleared"));
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private LiteralArgumentBuilder<CommandSourceStack> setIconCommand() {
+        return Commands.literal("seticon")
+                .requires(source ->
+                        source.getExecutor() instanceof Player &&
+                                source.getSender().hasPermission(PERM_SET_ICON)
+                )
+                .then(Commands.argument("badge", StringArgumentType.string())
+                        .suggests(playerBadges(plugin.getBadgeData()))
+                        .executes(this::executeSetIcon)
+                );
+    }
+
+    private int executeSetIcon(CommandContext<CommandSourceStack> ctx) {
+        String badgeName = ctx.getArgument("badge", String.class).toLowerCase();
+        Badge badge = plugin.getBadgeData().getBadge(badgeName);
+        Player player = (Player) ctx.getSource().getSender();
+
+        if (badge == null || !plugin.getBadgeData().playerHasBadge(player.getUniqueId(), badge)) {
+            player.sendMessage(plugin.config().getMessage("badge-not-found",
+                    CustomTagResolvers.badgeResolver(badgeName)
+            ));
+            return Command.SINGLE_SUCCESS;
+        }
+
+        plugin.getBadgeData().getPlayerBadgeData(player.getUniqueId()).updatePlayerIcon(
+                badge, plugin.config().getIconPrefixWeight());
+
+        player.sendMessage(plugin.config().getMessage("badge-set-icon",
+                CustomTagResolvers.badgeResolver(badgeName)
+        ));
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private LiteralArgumentBuilder<CommandSourceStack> clearIconCommand() {
+        return Commands.literal("clearicon")
+                .requires(source ->
+                        source.getExecutor() instanceof Player &&
+                                source.getSender().hasPermission(PERM_CLEAR_ICON)
+                ).executes(this::executeClearIcon);
+    }
+
+    private int executeClearIcon(CommandContext<CommandSourceStack> ctx) {
+        Player player = (Player) ctx.getSource().getSender();
+        plugin.getBadgeData().getPlayerBadgeData(player.getUniqueId()).clearPlayerIcon(
+                plugin.config().getIconPrefixWeight());
+        player.sendMessage(plugin.config().getMessage("badge-cleared-icon"));
         return Command.SINGLE_SUCCESS;
     }
 

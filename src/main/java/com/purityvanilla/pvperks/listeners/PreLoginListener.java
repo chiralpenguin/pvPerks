@@ -1,6 +1,8 @@
 package com.purityvanilla.pvperks.listeners;
 
 import com.purityvanilla.pvperks.PVPerks;
+import com.purityvanilla.pvperks.player.Badge;
+import com.purityvanilla.pvperks.player.PlayerBadgeData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
@@ -21,6 +23,25 @@ public class PreLoginListener implements Listener {
         }
 
         UUID uuid = event.getUniqueId();
-        plugin.getBadgeData().getPlayerBadgeData(uuid);
+        PlayerBadgeData playerBadgeData = plugin.getBadgeData().getPlayerBadgeData(uuid);
+        String activeBadge = playerBadgeData.getActiveBadge();
+        if (!activeBadge.isEmpty()) {
+            if (playerBadgeData.getBadges().contains(activeBadge)) {
+                Badge badge = plugin.getBadgeData().getBadge(activeBadge);
+                playerBadgeData.updatePlayerBadge(badge, plugin.config().getBadgeSuffixWeight());
+            } else {
+                playerBadgeData.clearPlayerBadge(plugin.config().getBadgeSuffixWeight());
+            }
+        }
+
+        String activeIcon = playerBadgeData.getActiveIcon();
+        if (!activeIcon.isEmpty()) {
+            if (playerBadgeData.getBadges().contains(activeIcon)) {
+                Badge icon = plugin.getBadgeData().getBadge(activeIcon);
+                playerBadgeData.updatePlayerBadge(icon, plugin.config().getIconPrefixWeight());
+            } else {
+                playerBadgeData.clearPlayerBadge(plugin.config().getIconPrefixWeight());
+            }
+        }
     }
 }
