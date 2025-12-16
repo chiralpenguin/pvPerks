@@ -175,6 +175,7 @@ public class BadgeCommand {
 
         player.sendMessage(plugin.config().getMessage("badge-list-header"));
         player.sendMessage(playerBadgeData.getBadgeListMessage(plugin.getBadgeData(), plugin.config()));
+        player.sendMessage(plugin.config().getMessage("badge-list-footer"));
 
         return Command.SINGLE_SUCCESS;
     }

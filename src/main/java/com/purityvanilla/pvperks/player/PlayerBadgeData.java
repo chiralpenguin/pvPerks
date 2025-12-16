@@ -23,7 +23,7 @@ public class PlayerBadgeData {
         this.playerID = playerID;
         this.availableBadges = availableBadges;
         this.activeBadge = activeBadge;
-        this.activeIcon = activeBadge;
+        this.activeIcon = activeIcon;
     }
 
     public PlayerBadgeData(UUID playerID, Set<String> availableBadges) {
@@ -83,7 +83,7 @@ public class PlayerBadgeData {
 
     public Component getBadgeListMessage(BadgeDataService badgeData, Config config) {
         TextComponent.Builder message = Component.text();
-        for (String badgeName : availableBadges) {
+        for (String badgeName : availableBadges.stream().sorted().toList()) {
             Badge badge = badgeData.getBadge(badgeName);
             if (badge == null) continue;
             // TODO Generalise to accept both MiniMessage and Legacy format codes as LuckPerms supports both

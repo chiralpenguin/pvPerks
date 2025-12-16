@@ -28,6 +28,7 @@ public class BadgeMetaHelper {
         LuckPerms luckPerms = LuckPermsProvider.get();
         luckPerms.getUserManager().loadUser(uuid).thenAccept(user -> {
             user.data().clear(node -> node instanceof PrefixNode pn && pn.getPriority() == priority);
+            luckPerms.getUserManager().saveUser(user);
         });
     }
 
@@ -48,6 +49,7 @@ public class BadgeMetaHelper {
         LuckPerms luckPerms = LuckPermsProvider.get();
         luckPerms.getUserManager().loadUser(uuid).thenAccept(user -> {
             user.data().clear(node -> node instanceof SuffixNode sn && sn.getPriority() == priority);
+            luckPerms.getUserManager().saveUser(user);
         });
     }
 }

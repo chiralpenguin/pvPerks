@@ -4,6 +4,7 @@
   "badge-cleared-icon": "<aqua>Cleared icon",
   "badge-created": "<aqua>Created new badge <gold><badge>",
   "badge-deleted": "<aqua>Deleted badge <gold><badge>",
+  "badge-list-footer": "<grey>-----",
   "badge-list-header": "<aqua>The following badges are available:",
   "badge-list-hover": "<aqua>Click to select <gold><badge>",
   "badge-list-empty": "<red>No badges available",

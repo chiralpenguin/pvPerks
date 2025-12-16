@@ -38,9 +38,9 @@ public class PreLoginListener implements Listener {
         if (!activeIcon.isEmpty()) {
             if (playerBadgeData.getBadges().contains(activeIcon)) {
                 Badge icon = plugin.getBadgeData().getBadge(activeIcon);
-                playerBadgeData.updatePlayerBadge(icon, plugin.config().getIconPrefixWeight());
+                playerBadgeData.updatePlayerIcon(icon, plugin.config().getIconPrefixWeight());
             } else {
-                playerBadgeData.clearPlayerBadge(plugin.config().getIconPrefixWeight());
+                playerBadgeData.clearPlayerIcon(plugin.config().getIconPrefixWeight());
             }
         }
     }
