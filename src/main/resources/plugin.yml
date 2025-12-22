@@ -32,7 +32,7 @@ commands:
     aliases: [ lastseen ]
   badge:
     description: Manage active badges and icons per player or server-wide
-    usage: /badge <create|delete|player|list|seticon|setbadge>
+    usage: /badge <create|delete|player|list|set|seticon>
     permission: pvperks.badge
   badges:
     description: Opens the badge GUI for easy selection of an active badge

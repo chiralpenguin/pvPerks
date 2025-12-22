@@ -226,16 +226,17 @@ public class BadgeCommand {
         return Commands.literal("player")
                 .requires(source -> source.getSender().hasPermission(PERM_MANAGE_PLAYER))
                 .then(addPlayerBadgeCommand())
-                .then(removePlayerBadgeCommand());
+                .then(removePlayerBadgeCommand())
+                .then(setPlayerBadgeCommand());
 
     }
 
     private LiteralArgumentBuilder<CommandSourceStack> addPlayerBadgeCommand() {
         return Commands.literal("add")
-                .then(Commands.argument("badge", StringArgumentType.string())
-                        .suggests(badges(plugin.getBadgeData()))
-                        .then(Commands.argument("player", StringArgumentType.string())
-                                .suggests(playerNames())
+                .then(Commands.argument("player", StringArgumentType.string())
+                        .suggests(playerNames())
+                        .then(Commands.argument("badge", StringArgumentType.string())
+                                .suggests(badges(plugin.getBadgeData()))
                                 .executes(this::executeAddPlayerBadge)
                 ));
     }
@@ -267,10 +268,10 @@ public class BadgeCommand {
 
     private LiteralArgumentBuilder<CommandSourceStack> removePlayerBadgeCommand() {
         return Commands.literal("remove")
-                .then(Commands.argument("badge", StringArgumentType.string())
-                        .suggests(badges(plugin.getBadgeData()))
-                        .then(Commands.argument("player", StringArgumentType.string())
-                                .suggests(playerNames())
+                .then(Commands.argument("player", StringArgumentType.string())
+                        .suggests(playerNames())
+                        .then(Commands.argument("badge", StringArgumentType.string())
+                                .suggests(badges(plugin.getBadgeData()))
                                 .executes(this::executeRemovePlayerBadge)
                         ));
     }
@@ -300,6 +301,44 @@ public class BadgeCommand {
 
         sender.sendMessage(plugin.config().getMessage(
                 "badge-removed", CustomTagResolvers.playerBadgeResolver(target.getName(), badgeName)));
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private LiteralArgumentBuilder<CommandSourceStack> setPlayerBadgeCommand() {
+        return Commands.literal("set")
+                .then(Commands.argument("player", StringArgumentType.string())
+                        .suggests(playerNames())
+                        .then(Commands.argument("badge", StringArgumentType.string())
+                                .suggests(badges(plugin.getBadgeData()))
+                                .executes(this::executeSetPlayerBadge)
+                        ));
+    }
+
+    private int executeSetPlayerBadge(CommandContext<CommandSourceStack> ctx) {
+        CommandSender sender = ctx.getSource().getSender();
+
+        OfflinePlayer target = Bukkit.getOfflinePlayer(ctx.getArgument("player", String.class));
+        if (!target.hasPlayedBefore()) {
+            sender.sendMessage(plugin.config().getMessage("player-not-found"));
+            return Command.SINGLE_SUCCESS;
+        }
+        UUID targetID = target.getUniqueId();
+
+        String badgeName = ctx.getArgument("badge", String.class).toLowerCase();
+        Badge badge = plugin.getBadgeData().getBadge(badgeName);
+        if (badge == null || !plugin.getBadgeData().playerHasBadge(targetID, badge)) {
+            sender.sendMessage(plugin.config().getMessage(
+                    "badge-not-found", CustomTagResolvers.badgeResolver(badgeName)));
+            return Command.SINGLE_SUCCESS;
+        }
+
+        plugin.getBadgeData().getPlayerBadgeData(targetID).updatePlayerBadge(
+                badge, plugin.config().getBadgeSuffixWeight());
+
+        sender.sendMessage(plugin.config().getMessage("badge-set",
+                CustomTagResolvers.badgeResolver(badgeName)
+        ));
+
         return Command.SINGLE_SUCCESS;
     }
 
