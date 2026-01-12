@@ -227,7 +227,10 @@ public class BadgeCommand {
                 .requires(source -> source.getSender().hasPermission(PERM_MANAGE_PLAYER))
                 .then(addPlayerBadgeCommand())
                 .then(removePlayerBadgeCommand())
-                .then(setPlayerBadgeCommand());
+                .then(setPlayerBadgeCommand())
+                .then(clearPlayerBadgeCommand())
+                .then(setPlayerIconCommand())
+                .then(clearPlayerIconCommand());
 
     }
 
@@ -342,12 +345,110 @@ public class BadgeCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    private LiteralArgumentBuilder<CommandSourceStack> clearPlayerBadgeCommand() {
+        return Commands.literal("clear")
+                .then(Commands.argument("player", StringArgumentType.string())
+                        .suggests(playerNames())
+                        .executes(this::executeClearPlayerBadge)
+                );
+    }
+
+    private int executeClearPlayerBadge(CommandContext<CommandSourceStack> ctx) {
+        CommandSender sender = ctx.getSource().getSender();
+
+        OfflinePlayer target = Bukkit.getOfflinePlayer(ctx.getArgument("player", String.class));
+        if (!target.hasPlayedBefore()) {
+            sender.sendMessage(plugin.config().getMessage("player-not-found"));
+            return Command.SINGLE_SUCCESS;
+        }
+        UUID targetID = target.getUniqueId();
+
+        plugin.getBadgeData().getPlayerBadgeData(targetID).clearPlayerBadge(
+                plugin.config().getBadgeSuffixWeight()
+        );
+
+        sender.sendMessage(plugin.config().getMessage("badge-cleared"));
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private LiteralArgumentBuilder<CommandSourceStack> setPlayerIconCommand() {
+        return Commands.literal("seticon")
+                .then(Commands.argument("player", StringArgumentType.string())
+                        .suggests(playerNames())
+                        .then(Commands.argument("badge", StringArgumentType.string())
+                                .suggests(badges(plugin.getBadgeData()))
+                                .executes(this::executeSetPlayerIcon)
+                        ));
+    }
+
+    private int executeSetPlayerIcon(CommandContext<CommandSourceStack> ctx) {
+        CommandSender sender = ctx.getSource().getSender();
+
+        OfflinePlayer target = Bukkit.getOfflinePlayer(ctx.getArgument("player", String.class));
+        if (!target.hasPlayedBefore()) {
+            sender.sendMessage(plugin.config().getMessage("player-not-found"));
+            return Command.SINGLE_SUCCESS;
+        }
+        UUID targetID = target.getUniqueId();
+
+        String badgeName = ctx.getArgument("badge", String.class).toLowerCase();
+        Badge badge = plugin.getBadgeData().getBadge(badgeName);
+        if (badge == null || !plugin.getBadgeData().playerHasBadge(targetID, badge)) {
+            sender.sendMessage(plugin.config().getMessage(
+                    "badge-not-found", CustomTagResolvers.badgeResolver(badgeName)));
+            return Command.SINGLE_SUCCESS;
+        }
+
+        plugin.getBadgeData().getPlayerBadgeData(targetID).updatePlayerIcon(
+                badge, plugin.config().getIconPrefixWeight());
+
+        sender.sendMessage(plugin.config().getMessage("badge-set-icon",
+                CustomTagResolvers.badgeResolver(badgeName)
+        ));
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private LiteralArgumentBuilder<CommandSourceStack> clearPlayerIconCommand() {
+        return Commands.literal("clear")
+                .then(Commands.argument("player", StringArgumentType.string())
+                        .suggests(playerNames())
+                        .executes(this::executeClearPlayerIcon)
+                );
+    }
+
+    private int executeClearPlayerIcon(CommandContext<CommandSourceStack> ctx) {
+        CommandSender sender = ctx.getSource().getSender();
+
+        OfflinePlayer target = Bukkit.getOfflinePlayer(ctx.getArgument("player", String.class));
+        if (!target.hasPlayedBefore()) {
+            sender.sendMessage(plugin.config().getMessage("player-not-found"));
+            return Command.SINGLE_SUCCESS;
+        }
+        UUID targetID = target.getUniqueId();
+
+        plugin.getBadgeData().getPlayerBadgeData(targetID).clearPlayerIcon(
+                plugin.config().getIconPrefixWeight()
+        );
+
+        sender.sendMessage(plugin.config().getMessage("badge-cleared-icon"));
+        return Command.SINGLE_SUCCESS;
+    }
+
     /*
     Reusable SuggestionProviders
      */
     private SuggestionProvider<CommandSourceStack> playerNames() {
         return (ctx, builder) -> {
-            Bukkit.getOnlinePlayers().forEach(p -> builder.suggest(p.getName()));
+            String partial =builder.getRemainingLowerCase();
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                String name = player.getName();
+                if (name.toLowerCase().startsWith(partial)) {
+                    builder.suggest(name);
+                }
+            }
+
             return builder.buildFuture();
         };
     }
