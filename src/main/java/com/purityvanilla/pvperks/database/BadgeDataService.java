@@ -111,6 +111,6 @@ public class BadgeDataService extends DataService {
      * @return {@code true} if badge available, {@code false} otherwise
      */
     public boolean playerHasBadge(UUID playerID, Badge badge) {
-        return playerBadgeCache.get(playerID).getBadges().contains(badge.getName());
+        return getPlayerBadgeData(playerID).getBadges().contains(badge.getName());
     }
 }
