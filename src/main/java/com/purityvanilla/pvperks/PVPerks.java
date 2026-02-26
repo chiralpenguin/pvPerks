@@ -69,6 +69,7 @@ public class PVPerks extends JavaPlugin {
             Commands commands = event.registrar();
 
             commands.register(new BadgeCommand(this).buildCommand(), "Manage badges", List.of());
+            commands.register(new ChatItemCommand(this).buildCommand(), "Display held item in chat", List.of());
         });
     }
 

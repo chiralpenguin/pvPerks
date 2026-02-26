@@ -16,6 +16,8 @@
   "badge-set": "<aqua>Set active badge to <gold><badge>",
   "badge-set-icon": "<aqua>Set active icon to <gold><badge>",
   "badge-updated": "<aqua>Updated existing badge <gold><badge>",
+  "chatitem-empty": "<red>You are not holding an item!",
+  "chatitem-message": "<aqua>Player <gold><player> <aqua>is holding <reset><item>",
   "console-only": "<red>This command can only be used from console",
   "hat-item-restricted": "<red>This command does not support the held item",
   "hat-usage": "<red>You must be holding an item in your hand",
