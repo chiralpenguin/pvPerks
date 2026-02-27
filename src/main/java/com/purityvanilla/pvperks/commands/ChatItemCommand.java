@@ -3,6 +3,7 @@ package com.purityvanilla.pvperks.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.purityvanilla.pvcore.PVCore;
 import com.purityvanilla.pvperks.PVPerks;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -52,7 +53,9 @@ public class ChatItemCommand {
                 Placeholder.component("item", itemName)
         ));
 
-        player.getServer().broadcast(message);
+        for (Player target : plugin.getServer().getOnlinePlayers()) {
+            if (!PVCore.getAPI().getPlayerAPI().isPlayerIgnored(target, player)) target.sendMessage(message);
+        }
         return Command.SINGLE_SUCCESS;
     }
 }

@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "9.2.2"
 }
 
 group = "com.purityvanilla"
@@ -19,18 +19,19 @@ dependencies {
     compileOnly("net.luckperms", "api", "5.4")
 }
 
+val shadowJarName = "pvPerks.jar"
+
 tasks.shadowJar {
-    dependsOn(tasks.build)
     archiveClassifier.set("") // This removes the default "-all" classifier
-    archiveFileName.set("pvPerks.jar")
+    archiveFileName.set(shadowJarName);
 }
 
 val testServerPluginsPath: String by project
 tasks {
     val copyToServer by registering(Copy::class, fun Copy.() {
-            dependsOn("shadowJar")
-            from(layout.buildDirectory.file("libs"))
-            include("pvPerks.jar") // Change to "plugin-version.jar" if no shadowing
-            into(file(testServerPluginsPath)) // Use the externalized path here
-        })
+        dependsOn("shadowJar")
+        from(layout.buildDirectory.file("libs"))
+        include(shadowJarName) // Change to "plugin-version.jar" if no shadowing
+        into(file(testServerPluginsPath)) // Use the externalized path here
+    })
 }
