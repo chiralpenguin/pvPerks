@@ -7,6 +7,7 @@ public class Config extends ConfigFile {
     private final float defaultBeheadingChance;
     private final int badgeSuffixWeight;
     private final int iconPrefixWeight;
+    private final String afkGroupName;
     private final boolean verbose;
 
     public Config() {
@@ -16,6 +17,7 @@ public class Config extends ConfigFile {
         defaultBeheadingChance = configRoot.node("default_beheading_chance").getFloat();
         badgeSuffixWeight = configRoot.node("badge_suffix_weight").getInt();
         iconPrefixWeight = configRoot.node("icon_prefix_weight").getInt();
+        afkGroupName = configRoot.node("afk_group_name").getString();
         verbose = configRoot.node("verbose").getBoolean();
     }
 
@@ -29,6 +31,10 @@ public class Config extends ConfigFile {
 
     public int getBadgeSuffixWeight() {
         return badgeSuffixWeight;
+    }
+
+    public String getAfkGroupName() {
+        return afkGroupName;
     }
 
     public boolean verbose() {

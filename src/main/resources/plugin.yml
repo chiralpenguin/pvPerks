@@ -7,6 +7,15 @@ description: Chat plugin for the Purity Vanilla Minecraft server
 folia-supported: true
 depend: [pvLib, pvCore]
 commands:
+  afk:
+    description: Applies the afk permission group until your player moves or disconnects
+    usage: /afk
+    permission: pvperks.afk
+  chatitem:
+    description: Send a message with hover event for your currently held item
+    usage: /chatitem
+    permission: pvperks.chatitem
+    aliases: [showcase]
   hat:
     description: Wear the currently held item in your head armour slot
     usage: /hat

@@ -1,4 +1,6 @@
 {
+  "afk": "<aqua>You are now AFK",
+  "afk-removed": "<aqua>You are no longer AFK",
   "badge-added": "<aqua>Player <gold><player> <aqua>can now use badge <gold><badge>",
   "badge-cleared": "<aqua>Cleared badge",
   "badge-cleared-icon": "<aqua>Cleared icon",
