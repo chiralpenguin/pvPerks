@@ -89,6 +89,7 @@ public class PVPerks extends JavaPlugin {
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new AsyncChatListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
         getServer().getPluginManager().registerEvents(new PrepareAnvilListener(this), this);
         getServer().getPluginManager().registerEvents(new PreLoginListener(this), this);

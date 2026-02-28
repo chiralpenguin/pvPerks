@@ -410,7 +410,7 @@ public class BadgeCommand {
     }
 
     private LiteralArgumentBuilder<CommandSourceStack> clearPlayerIconCommand() {
-        return Commands.literal("clear")
+        return Commands.literal("clearicon")
                 .then(Commands.argument("player", StringArgumentType.string())
                         .suggests(playerNames())
                         .executes(this::executeClearPlayerIcon)

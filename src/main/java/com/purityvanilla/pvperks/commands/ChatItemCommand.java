@@ -45,8 +45,7 @@ public class ChatItemCommand {
 
         Component itemName = item.displayName()
                 .hoverEvent(item.asHoverEvent())
-                .color(NamedTextColor.LIGHT_PURPLE)
-                .decorate(TextDecoration.BOLD);
+                .color(NamedTextColor.LIGHT_PURPLE);
 
         Component message = plugin.config().getMessage("chatitem-message", TagResolver.resolver(
                 Placeholder.component("player", player.displayName()),
